@@ -47,10 +47,12 @@ const sendWithSmtp = async (email, otp) => {
 
 const sendOTP = async (email, otp) => {
   if (isPresent(process.env.RESEND_API_KEY)) {
+    console.log("OTP email provider: resend");
     await sendWithResend(email, otp);
     return;
   }
 
+  console.log("OTP email provider: smtp");
   await sendWithSmtp(email, otp);
 };
 
