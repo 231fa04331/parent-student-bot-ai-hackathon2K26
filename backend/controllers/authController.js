@@ -55,6 +55,7 @@ const sendOtp = async (req, res) => {
       await sendOTP(student.email, otp);
     } catch (error) {
       emailSent = false;
+      console.error("OTP email delivery failed:", error.message);
       if (process.env.NODE_ENV === "production") {
         return res.status(500).json({ message: "Failed to deliver OTP" });
       }
