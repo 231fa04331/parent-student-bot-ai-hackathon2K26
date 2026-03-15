@@ -18,32 +18,42 @@ const validateEnv = () => {
   }
 
   if (nodeEnv === "production") {
+    const resendApiKey = String(process.env.RESEND_API_KEY || "").trim();
+    const resendFrom = String(process.env.RESEND_FROM_EMAIL || "").trim();
     const smtpHost = String(process.env.SMTP_HOST || "").trim();
     const smtpPort = String(process.env.SMTP_PORT || "").trim();
     const smtpUser = String(process.env.SMTP_USER || "").trim();
     const smtpPass = String(process.env.SMTP_PASS || "").trim();
     const smtpFrom = String(process.env.SMTP_FROM || "").trim();
 
-    if (!smtpHost) {
-      errors.push("SMTP_HOST is required in production");
-    }
+    const usingResend = Boolean(resendApiKey);
 
-    if (!smtpPort) {
-      errors.push("SMTP_PORT is required in production");
-    } else if (Number.isNaN(Number(smtpPort))) {
-      errors.push("SMTP_PORT must be a valid number");
-    }
+    if (usingResend) {
+      if (!resendFrom && !smtpFrom) {
+        errors.push("RESEND_FROM_EMAIL or SMTP_FROM is required when RESEND_API_KEY is set");
+      }
+    } else {
+      if (!smtpHost) {
+        errors.push("SMTP_HOST is required in production");
+      }
 
-    if (!smtpUser) {
-      errors.push("SMTP_USER is required in production");
-    }
+      if (!smtpPort) {
+        errors.push("SMTP_PORT is required in production");
+      } else if (Number.isNaN(Number(smtpPort))) {
+        errors.push("SMTP_PORT must be a valid number");
+      }
 
-    if (!smtpPass) {
-      errors.push("SMTP_PASS is required in production");
-    }
+      if (!smtpUser) {
+        errors.push("SMTP_USER is required in production");
+      }
 
-    if (!smtpFrom) {
-      errors.push("SMTP_FROM is required in production");
+      if (!smtpPass) {
+        errors.push("SMTP_PASS is required in production");
+      }
+
+      if (!smtpFrom) {
+        errors.push("SMTP_FROM is required in production");
+      }
     }
   }
 
