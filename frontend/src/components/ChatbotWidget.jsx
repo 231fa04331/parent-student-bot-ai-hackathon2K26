@@ -3,6 +3,7 @@ import { motion as Motion } from "framer-motion";
 import jsPDF from "jspdf";
 import { chatbotApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import SpeakButton from "./SpeakButton";
 
 const SUGGESTED_QUERIES = [
   "What is my child's attendance?",
@@ -269,6 +270,8 @@ const getSpeechRecognition = () => {
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 };
 
+const SPEECH_CHANGED_EVENT = "chatbot-speech-changed";
+
 const ChatbotWidget = () => {
   const { studentId } = useAuth();
   const historyKey = useMemo(() => `chat-history-${studentId || "guest"}`, [studentId]);
@@ -295,6 +298,7 @@ const ChatbotWidget = () => {
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [speechLanguage, setSpeechLanguage] = useState("en");
 
   const handleDownloadReport = (downloadItem) => {
     if (!downloadItem?.fileName) return;
@@ -358,6 +362,14 @@ const ChatbotWidget = () => {
     if (!chatContainerRef.current) return;
     chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
   }, [messages, loading]);
+
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.role === "assistant" && typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      window.dispatchEvent(new CustomEvent(SPEECH_CHANGED_EVENT, { detail: { speechId: null } }));
+    }
+  }, [messages]);
 
   useEffect(() => {
     const saved = localStorage.getItem(historyKey);
@@ -474,6 +486,18 @@ const ChatbotWidget = () => {
           >
             Clear Chat
           </button>
+          <select
+            value={speechLanguage}
+            onChange={(event) => setSpeechLanguage(event.target.value)}
+            className="interactive-btn rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-secondary"
+            aria-label="Speech language"
+            title="Speech language"
+          >
+            <option value="en">English</option>
+            <option value="te">Telugu</option>
+            <option value="hi">Hindi</option>
+            <option value="ta">Tamil</option>
+          </select>
         </div>
         <button
           type="button"
@@ -513,6 +537,11 @@ const ChatbotWidget = () => {
               }`}
             >
               <pre className="whitespace-pre-wrap font-sans">{message.text}</pre>
+              {message.role === "assistant" && (
+                <div className="mt-2">
+                  <SpeakButton speechId={message.id} text={message.text} language={speechLanguage} />
+                </div>
+              )}
               {message.role === "assistant" && Array.isArray(message?.meta?.downloads) && message.meta.downloads.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2">
                   {message.meta.downloads.map((item) => (
