@@ -1,5 +1,11 @@
 const nodemailer = require("nodemailer");
+const dns = require("dns");
 require("dotenv").config();
+
+if (typeof dns.setDefaultResultOrder === "function") {
+  const dnsOrder = String(process.env.DNS_RESULT_ORDER || "ipv4first").trim();
+  dns.setDefaultResultOrder(dnsOrder);
+}
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
