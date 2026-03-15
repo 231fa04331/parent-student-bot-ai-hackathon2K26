@@ -11,6 +11,7 @@ const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
   secure: String(process.env.SMTP_SECURE || "false").toLowerCase() === "true",
+  family: Number(process.env.SMTP_IP_FAMILY || 4),
   // Fail fast in production deployments when SMTP host is unreachable.
   connectionTimeout: Number(process.env.SMTP_CONNECTION_TIMEOUT_MS || 10000),
   greetingTimeout: Number(process.env.SMTP_GREETING_TIMEOUT_MS || 10000),
