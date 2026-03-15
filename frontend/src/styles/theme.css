@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap");
+
+:root {
+  --color-primary: #b33a0b;
+  --color-secondary: #1f3a63;
+  --color-background: #f5f7fa;
+  --color-accent: #ffd8c2;
+  --color-surface: #ffffff;
+  --color-muted: #5a6575;
+  --shadow-soft: 0 14px 40px rgba(31, 58, 99, 0.12);
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  background: radial-gradient(circle at 20% -10%, #ffe9de 0%, #f5f7fa 35%, #f5f7fa 100%);
+  color: var(--color-secondary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
+}
+
+.university-card {
+  background: linear-gradient(160deg, #ffffff 0%, #fff9f6 100%);
+  border: 1px solid rgba(179, 58, 11, 0.08);
+  box-shadow: var(--shadow-soft);
+}
+
+.interactive-card {
+  transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+}
+
+.interactive-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(179, 58, 11, 0.25);
+  box-shadow: 0 18px 44px rgba(31, 58, 99, 0.18);
+}
+
+.interactive-btn {
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.interactive-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(179, 58, 11, 0.25);
+}
+
+.interactive-link {
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.interactive-link:hover {
+  transform: translateY(-1px);
+}
+
+.section-title {
+  letter-spacing: 0.02em;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+}
